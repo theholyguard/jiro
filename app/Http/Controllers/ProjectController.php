@@ -2,63 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche tous les projets de l'utilisateur connecté
      */
     public function index()
     {
-        //
+        $projects = Project::where('user_id', Auth::id())->get();
+
+        return view('projects.index', compact('projects'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Affiche un projet et ses tickets
      */
-    public function create()
+    public function show(Project $project)
     {
-        //
+        // Optionnel : vérifier que l'utilisateur a le droit de voir ce projet
+        if ($project->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $project->load('tickets'); // Eager load des tickets
+
+        return view('projects.show', compact('project'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Méthodes restantes pas encore utilisées
      */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function create() {}
+    public function store(Request $request) {}
+    public function edit(Project $project) {}
+    public function update(Request $request, Project $project) {}
+    public function destroy(Project $project) {}
 }
