@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">Mes projets</h1>
+    <h1>Liste des projets</h1>
 
-    <ul>
-        @foreach ($projects as $project)
-            <li class="mb-2">
-                <a href="{{ route('projects.show', $project) }}" class="text-blue-600 underline">
-                    {{ $project->name }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
+    <p>Utilisateur connecté : {{ Auth::user()->email }}</p>
+
+    @if ($projects->isEmpty())
+        <p>Aucun projet trouvé.</p>
+    @else
+        <ul>
+            @foreach ($projects as $project)
+                <li>{{ $project->name }}</li>
+            @endforeach
+        </ul>
+    @endif
 @endsection
