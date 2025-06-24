@@ -32,12 +32,26 @@ class ProjectController extends Controller
 
         return view('projects.show', compact('project'));
     }
+    public function create()
+{
+    return view('projects.create');
+}
+public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
 
-    /**
-     * Méthodes restantes pas encore utilisées
-     */
-    public function create() {}
-    public function store(Request $request) {}
+    $project = \App\Models\Project::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'user_id' => auth()->id(),
+    ]);
+
+    return redirect()->route('projects.index')->with('success', 'Projet créé avec succès.');
+}
+
     public function edit(Project $project) {}
     public function update(Request $request, Project $project) {}
     public function destroy(Project $project) {}
